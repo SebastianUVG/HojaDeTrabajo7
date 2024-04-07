@@ -1,6 +1,7 @@
 package uvg.edu.gt;
 
 /**
+ * Codigo inspirado en los documentos que brindo el profesor
  * Esta clase implementa un árbol binario para almacenar pares clave-valor
  * de cualquier tipo, siempre y cuando el tipo de la clave implemente la
  * interfaz {@link Comparable}.
