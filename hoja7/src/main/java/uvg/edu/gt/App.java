@@ -1,3 +1,9 @@
+/** Programa elaborado por Sebastian Garcia
+ * @version 1.0
+ * @since 2024-07-04
+ * El programa esta orientado a unos documentos que brindo el profesor para la ayuda de la elaboracion de dicho programa
+ */
+
 package uvg.edu.gt;
 
 import java.io.BufferedReader;
