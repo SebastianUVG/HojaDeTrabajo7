@@ -1,122 +1,67 @@
 package uvg.edu.gt;
 
 public class BinaryTree<E extends Comparable<E>> {
-    public class Node<E extends Comparable<E>>{
-        public E value;
-        public Node leftChild = null;
-        // Cambie a usar <E> para evitar usar cating.
-        public Node rightChild = null;
-        public Node parent = null;
-        public Node(E cValue){
-            this.value = cValue;
-        }
+    private Node<E> root;
 
-        public Node(E cValue, Node<E> parent){
-            this.value = cValue;
-            this.parent = parent;
-        }
+    private class Node<E> {
+        private E key;
+        private E value;
+        private Node<E> left;
+        private Node<E> right;
 
-        public String toString(){
-            return value.toString();
-        }
-
-        public Node<E> addNode(E newVal) {
-            int compCase = newVal.compareTo(value);
-            if (compCase < 0) {
-                if (leftChild == null) {
-                    leftChild = new Node(newVal, this);
-                    return leftChild;
-                } else {
-                    return leftChild.addNode(newVal);
-                }
-            }
-            if (compCase == 0) {
-                // Update the value
-                value = newVal;
-                return this;
-            }
-            if (rightChild == null) {
-                rightChild = new Node(newVal, this);
-                return rightChild;
-            }
-            return rightChild.addNode(newVal);
-        }
-
-        public int nodeHeight(){
-            int currHeight = -1;
-            if (this.leftChild != null){
-                currHeight = this.leftChild.nodeHeight();
-            }
-            if (this.rightChild != null){
-                int rightHeight = this.leftChild.nodeHeight();
-                if (rightHeight > currHeight){
-                    currHeight = rightHeight;
-                }
-            }
-            return currHeight + 1;
-        }
-
-        public int nodeDepth(){
-            if (this.parent == null){
-                return 0;
-            }
-            return 1 + this.parent.nodeDepth();
-        }
-
-        public Node<E> getNode(E key){
-            if (this.value.compareTo(key)==0){
-                return this;
-            }
-            // busque a la izquierda o a la derecha
-            // como se que lado buscar
-            return null;
+        public Node(E key, E value) {
+            this.key = key;
+            this.value = value;
+            this.left = null;
+            this.right = null;
         }
     }
 
-    private Node<E> root;
-
-    public BinaryTree(){
+    public BinaryTree() {
         this.root = null;
     }
 
-    public E add(E newVal){
-        if (root == null){
-            root = new Node<E>(newVal);
-            return root.value;
+    public void add(E key, E value) {
+        this.root = addRecursive(this.root, key, value);
+    }
+
+    private Node<E> addRecursive(Node<E> current, E key, E value) {
+        if (current == null) {
+            return new Node<>(key, value);
         }
-        return (E) root.addNode(newVal).value;
-    }
 
-    public int height(){
-        if (this.root  == null){
-            return -1;
+        int comparison = key.compareTo(current.key);
+        if (comparison < 0) {
+            current.left = addRecursive(current.left, key, value);
+        } else if (comparison > 0) {
+            current.right = addRecursive(current.right, key, value);
+        } else {
+            // Key already exists, update value
+            current.value = value;
         }
-        return this.root.nodeHeight();
+
+        return current;
     }
 
-    public E get(E key){
-
-        return null;
+    public E get(E key) {
+        return getRecursive(root, key);
     }
 
-    public String toString() {
-        if (this.root != null) {
-            return vPrintSubTree(this.root, 1);
+    private E getRecursive(Node<E> current, E key) {
+        if (current == null) {
+            return null; // Key not found
         }
-        return "X";
+
+        int comparison = key.compareTo(current.key);
+        if (comparison == 0) {
+            return current.value;
+        } else if (comparison < 0) {
+            return getRecursive(current.left, key);
+        } else {
+            return getRecursive(current.right, key);
+        }
     }
+
 
     
-    public String vPrintSubTree(Node<E> x, int depth){
-        String txt = "";
-        txt = " ".repeat(depth);
-        txt += "->" + x.value.toString() + "\n";
-        if (x.leftChild!=null){
-            txt = vPrintSubTree(x.leftChild, depth + 1) + "\n" + txt;
-        }
-        if (x.rightChild!=null){
-            txt = txt + "\n" + vPrintSubTree(x.rightChild, depth + 1);
-        }
-        return txt;
-    }
 }

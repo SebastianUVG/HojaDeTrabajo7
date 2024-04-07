@@ -25,20 +25,21 @@ public class App
         String rutaAlternaDiccionario = "C:\\Users\\sebas\\OneDrive\\Escritorio\\HojaDeTrabajo7\\hoja7\\src\\main\\java\\uvg\\edu\\gt\\"+diccionario;
         
         
-        BinaryTree<Association<String, String>> arbol = new BinaryTree<Association<String, String>>();
-        
+        BinaryTree<String> arbol = new BinaryTree<>();
+
         try (BufferedReader br = new BufferedReader(new FileReader(rutaAlternaDiccionario))){
             String datos;
             while ((datos = br.readLine()) != null){
                 String[] opciones = datos.replaceAll("[()]", "").split("\\s+");
                 if(opciones.length == 2){
-                    arbol.add(new Association<>(opciones[0], opciones[1]));
+                    arbol.add(opciones[0], opciones[1]);
                 }
             } 
             System.out.println("Lectura del diccionario exitosa");
 
         }catch (IOException e){
             System.err.println("Error al tratar de leer los archivos.");
+            return;
         }
 
 
@@ -52,21 +53,29 @@ public class App
 
 
 
-        System.out.println("El archivo " + nombre + " se esta traduciendo");
-        try (BufferedReader br2 = new BufferedReader(new FileReader(rutaAlternaArchivo))){
-            String datos; 
-            while ((datos = br2.readLine()) != null) 
-            {
-                String[] palabras = datos.split("\\s+");
-                //System.out.println(palabras);
-                for(String palabra:palabras){
-                    String ajustes = palabra.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
-                    Association<String,String> busqueda = arbol.toString(new Association<>(ajustes, ""));
-                }
+        System.out.println("El archivo " + nombre + " se está traduciendo");
+try (BufferedReader br2 = new BufferedReader(new FileReader(rutaAlternaArchivo))){
+    String datos;
+    while ((datos = br2.readLine()) != null) {
+        String[] palabras = datos.split("\\s+");
+        for (String palabra : palabras) {
+            // Normaliza la palabra eliminando caracteres no alfabéticos y convirtiéndola a minúsculas
+            String ajustes = palabra.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
+            // Busca la traducción de la palabra en el árbol binario
+            String traduccion = arbol.get(ajustes);
+            if (traduccion != null) {
+                // Si se encuentra la traducción, imprímela
+                System.out.print(traduccion+ " ");
+            } else {
+                // Si no se encuentra la traducción, imprime la palabra original
+                System.out.print(palabra + " ");
             }
-        } catch (Exception e) {
-            // TODO: handle exception
-            System.err.println("Error al tratar de leer el documento.");;
         }
+        System.out.println(); // Nueva línea después de traducir una línea completa
+    }
+} catch (IOException e) {
+    System.err.println("Error al tratar de leer el documento.");
+}
+
     }
 }
